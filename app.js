@@ -6,7 +6,6 @@ const CONFIG = {
 
 const REQUEST_OPTIONS = {
     headers: {
-        'ngrok-skip-browser-warning': 'true',
         'x-api-key': CONFIG.KEY,
         'Content-Type': 'application/json',
 		'Accept-Encoding': 'gzip, deflate, br'
@@ -348,7 +347,7 @@ const initApp = async () => {
     try {
         const [domainsRes, configRes] = await Promise.all([
             fetch(`${CONFIG.BASE_URL}/allowed-domains`, REQUEST_OPTIONS),
-            fetch(`${CONFIG.BASE_URL}/api/config`, REQUEST_OPTIONS)
+            fetch(`${CONFIG.BASE_URL}/config`, REQUEST_OPTIONS)
         ]);
         
         const domainsJson = await domainsRes.json();
