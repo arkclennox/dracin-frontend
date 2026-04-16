@@ -1715,7 +1715,7 @@ window.showPaymentModal = () => {
                 <button onclick="processPayment('weekly', event)" class="flex justify-between items-center bg-slate-200 hover:bg-slate-300 p-4 rounded-2xl border border-slate-200 transition group">
                     <div class="text-left">
                         <div class="text-slate-900 font-bold text-sm">1 Minggu</div>
-                        <div class="text-orange-600 text-xs">Rp 10.000</div>
+                        <div class="text-orange-600 text-xs">Rp 5.000</div>
                     </div>
                     <span class="text-orange-600 opacity-0 group-hover:opacity-100">Beli &rarr;</span>
                 </button>
@@ -1723,7 +1723,7 @@ window.showPaymentModal = () => {
                 <button onclick="processPayment('monthly', event)" class="flex justify-between items-center bg-slate-200 hover:bg-slate-300 p-4 rounded-2xl border border-slate-200 transition group">
                     <div class="text-left">
                         <div class="text-slate-900 font-bold text-sm">1 Bulan</div>
-                        <div class="text-orange-600 text-xs">Rp 20.000</div>
+                        <div class="text-orange-600 text-xs">Rp 15.000</div>
                     </div>
                     <span class="text-orange-600 opacity-0 group-hover:opacity-100">Beli &rarr;</span>
                 </button>
@@ -1759,6 +1759,19 @@ window.closePaymentModal = () => {
     }
 };
 
+window.loadSnapScript = (snapUrl, clientKey) => {
+    return new Promise((resolve, reject) => {
+        if (window.snap) return resolve();
+        
+        const script = document.createElement('script');
+        script.src = snapUrl;
+        script.setAttribute('data-client-key', clientKey);
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+};
+
 window.processPayment = async (plan, event) => {
     const btn = event?.currentTarget || event?.target || null;
     const originalHTML = btn ? btn.innerHTML : "Beli";
@@ -1789,6 +1802,9 @@ window.processPayment = async (plan, event) => {
         const data = await res.json();
 
         if (res.status === 201 && data.token) {
+            // Load Snap script dynamically before paying
+            await loadSnapScript(data.snap_url, data.client_key);
+
             window.snap.pay(data.token, {
                 onSuccess: (result) => { 
                     alert("Pembayaran Berhasil! Status Premium Anda sedang diproses."); 
