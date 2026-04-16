@@ -15,7 +15,7 @@ const showPopupAd = () => {
         popup.style.display = 'flex';
 
         window.atOptions = {
-            'key' : '1e4197325c6ef10a187d8b2889d632ae',
+            'key' : '057eeb54498b34c6527c09423148a137',
             'format' : 'iframe',
             'height' : 250,
             'width' : 300,
@@ -24,7 +24,7 @@ const showPopupAd = () => {
 
         const adScript = document.createElement('script');
         adScript.type = 'text/javascript';
-        adScript.src = 'https://amoralstern.com/1e4197325c6ef10a187d8b2889d632ae/invoke.js?t=' + Date.now();
+        adScript.src = 'https://www.highperformanceformat.com/057eeb54498b34c6527c09423148a137/invoke.js?t=' + Date.now();
         
         adsPlaceholder.innerHTML = ''; 
         adsPlaceholder.appendChild(adScript);
@@ -43,20 +43,20 @@ const refreshAds = (type) => {
     const isMobile = window.innerWidth < 768;
 
     const bannerConfig = isMobile ? {
-        key: '30b457e8208305e3e692e62ed686fc39',
+        key: 'e77df22702afabcf38b8be8752b3ac88',
         format: 'iframe', height: 50, width: 320
     } : {
-        key: '6bc6463fa2497bc046044fa0f458d479',
+        key: '139f96c4b3fb147eb259e023caebd8af',
         format: 'iframe', height: 90, width: 728
     };
 
     const rectConfig = {
-        key: '1e4197325c6ef10a187d8b2889d632ae',
+        key: '057eeb54498b34c6527c09423148a137',
         format: 'iframe', height: 250, width: 300
     };
 	
 	const tiktokConfig = {
-        key: '30b457e8208305e3e692e62ed686fc39',
+        key: 'e77df22702afabcf38b8be8752b3ac88',
         format: 'iframe',
         height: 50,
         width: 320
@@ -105,7 +105,7 @@ const PopunderManager = {
         INITIAL_DELAY: 60000,      // 1 menit
         COOLDOWN: 150000,          // 2.5 menit
         DAILY_LIMIT: 4,            // Maks 4x/hari
-        URL: 'https://amoralstern.com/p5vk22db?key=1cf307fe25d93c5912951ec73981c179'
+        URL: 'https://www.diskonbelanja.online'
     },
 
     getStats() {
