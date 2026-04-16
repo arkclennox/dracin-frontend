@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dracindo Stream</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+	<meta name="description" content="Dracindo Stream">
+	<meta property="og:title" content="Dracindo">
+	<meta property="og:image" content="">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+    <style>
+        
+        
+        body { 
+            background-color: #f8f9fa; 
+            color: #1e293b; 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .shimmer {
+            background: linear-gradient(90deg, #f8fafc 25%, #f1f5f9 50%, #f8fafc 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .video-container-mobile { height: 100dvh; scroll-snap-type: y mandatory; overflow-y: scroll; }
+        .video-card-mobile { height: 100dvh; scroll-snap-align: start; position: relative; }
+        
+        .ad-banner { 
+            background: rgba(241, 245, 249, 0.5); 
+            border: 1px dashed rgba(203, 213, 225, 0.5); 
+            backdrop-blur: sm;
+        }
+		
+		video::-internal-media-controls-download-button {
+			display:none;
+		}
+
+		video::-webkit-media-controls-enclosure {
+			overflow:hidden;
+		}
+
+		video::-webkit-media-controls-panel {
+			width: calc(100% + 30px); 
+		}
+
+		.custom-scrollbar::-webkit-scrollbar {
+			width: 6px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		.custom-scrollbar::-webkit-scrollbar-thumb {
+			background: #cbd5e1;
+			border-radius: 10px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+			background: #f97316;
+		}
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+	<div id="app"></div>
+	
+	<script>window.API_HOST = 'https://api.dracin.buzz';</script>
+	<script src="ads2.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
