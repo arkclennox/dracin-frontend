@@ -249,7 +249,7 @@ const getNavbar = () => {
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
             
             <a href="javascript:void(0)" onclick="navigateTo('/')" class="text-xl md:text-2xl font-extrabold tracking-tighter text-orange-600">
-                DRAMA<span class="text-slate-900">BOSS</span>
+                DRACIN<span class="text-slate-900">BUZZ</span>
             </a>
 
             <div class="flex items-center md:order-last">
@@ -732,14 +732,14 @@ async function renderHome(container) {
     triggerSmartPopup();
 	
 	const homeSchema = {
-		"@name": "DRAMABOSS",
+		"@name": "DRACINBUZZ",
 		"@context": "https://schema.org",
 		"@type": "CollectionPage",
-		"name": "DRAMABOSS - Streaming Dracin Online",
-		"description": "Watch new drama, trends,, and popular with subtitle English, Indonesia & more in DRAMABOSS.",
+		"name": "DRACINBUZZ - Streaming Dracin Online",
+		"description": "Watch new drama, trends,, and popular with subtitle English, Indonesia & more in DRACINBUZZ.",
 		"publisher": {
 			"@type": "Organization",
-			"name": "DRAMABOSS"
+			"name": "DRACINBUZZ"
 		}
 	};
 	injectSchema(homeSchema);
@@ -765,7 +765,7 @@ async function renderDetail(bookId, container) {
         const listData = listRes.data || listRes;
         const episodes = episodesRes.data || episodesRes;
 
-		document.title = `Watch Online ${drama.bookName} | Dramaboss`;
+		document.title = `Watch Online ${drama.bookName} | DracinBuzz`;
 		let metaDesc = document.querySelector('meta[name="description"]');
 		if (!metaDesc) {
 			metaDesc = document.createElement('meta');
