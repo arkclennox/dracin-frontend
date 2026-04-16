@@ -83,7 +83,7 @@ const fetchWithFallback = async (endpointPattern) => {
         
         // Bahasa (Jika data kosong)
         if (!res.ok || json.error || (json.data && Object.keys(json.data).length === 0)) {
-            const availableLangs = ['in', 'en', 'fr', 'ja', 'de', 'es', 'zh', 'pt', 'ar', 'th', 'tl'];
+            const availableLangs = ['in', 'en', 'fr', 'ja', 'pt', 'th', 'tl'];
             for (let lang of availableLangs) {
                 if (lang === CONFIG.LANG) continue;
                 try {
@@ -503,18 +503,13 @@ async function renderSearchPage(query, container) {
     container.innerHTML = getSkeleton('home');
 
     const availableLangs = [
-        { label: 'ID', lang: 'in' },
-        { label: 'EN', lang: 'en' },
-        { label: 'FR', lang: 'fr' },
-        { label: 'JA', lang: 'ja' },
-        { label: 'DE', lang: 'de' },
-        { label: 'ES', lang: 'es' },
-        { label: 'PT', lang: 'pt' },
-        { label: 'AR', lang: 'ar' },
-        { label: 'TH', lang: 'th' },
-        { label: 'TL', lang: 'tl' },
-        { label: 'ZHHANS', lang: 'zhhans' },
-        { label: 'ZH', lang: 'zh' }
+        { label: 'Indonesia 🇮🇩', lang: 'in' },
+        { label: 'English 🇺🇸', lang: 'en' },
+        { label: 'Français 🇫🇷', lang: 'fr' },
+        { label: 'Japanese 🇯🇵', lang: 'ja' },
+        { label: 'Português 🇵🇹', lang: 'pt' },
+        { label: 'Thai 🇹🇭', lang: 'th' },
+        { label: 'Tagalog 🇵🇭', lang: 'tl' }
     ];
 
     const languageOptions = availableLangs.map(l => `
