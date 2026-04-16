@@ -1821,7 +1821,9 @@ window.processPayment = async (plan, event) => {
                 }
             });
         } else {
-            alert(data.message || "Gagal membuat sesi pembayaran.");
+            // Tampilkan detail error agar bisa di-debug
+            const errorMsg = data.detail ? `${data.message}: ${Array.isArray(data.detail) ? data.detail.join(', ') : data.detail}` : data.message;
+            alert(errorMsg || "Gagal membuat sesi pembayaran.");
         }
     } catch (err) {
         console.error("Frontend Error:", err);
