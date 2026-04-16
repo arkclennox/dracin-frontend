@@ -253,7 +253,7 @@ const getNavbar = () => {
             </a>
 
             <div class="flex items-center md:order-last">
-                <select onchange="switchLanguage(this.value.split('|')[0], this.value.split('|')[1])" 
+                <select onchange="switchLanguage(this.value)" 
                         class="bg-white text-slate-900 text-[10px] md:text-xs border border-slate-200 rounded-lg px-2 py-1 outline-none">
                     ${languageOptions}
                 </select>
