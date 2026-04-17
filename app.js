@@ -655,7 +655,7 @@ async function renderHome(container) {
             <section>
                 <h2 class="text-xl font-extrabold mb-6 flex items-center gap-3">
                     <span class="w-1.5 h-7 bg-orange-500 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)]"></span> 
-                    Sedang <span class="text-orange-600">Trending</span>
+                    Terakhir <span class="text-orange-600">Di Tonton</span>
                 </h2>
                 <div class="flex overflow-x-auto gap-5 hide-scrollbar pb-4">
                     ${(data.trending || []).map(item => `
