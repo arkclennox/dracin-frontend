@@ -369,6 +369,7 @@ const initApp = async () => {
         root.innerHTML = `
             ${getNavbar()}
             <div id="content-area"></div>
+            ${getFooter()}
         `;
         return true;
     } catch (e) {
@@ -383,6 +384,193 @@ const initApp = async () => {
         router();
     }
 })();
+
+const getFooter = () => {
+    return `
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-12 mt-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/20">
+                            <span class="text-slate-900 font-black text-xs">DB</span>
+                        </div>
+                        <span class="text-xl font-black text-slate-900 tracking-tighter italic">DRACIN<span class="text-orange-500">BUZZ</span></span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-sm">
+                        Platform streaming film pendek nomor satu untuk drama Asia pilihan. Nikmati ribuan jam konten premium dengan kualitas terbaik dan akses eksklusif.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-slate-900 font-bold text-sm mb-6 uppercase tracking-widest">Informasi</h4>
+                    <ul class="space-y-4">
+                        <li><a href="javascript:void(0)" onclick="navigateTo('?page=faq')" class="text-slate-500 hover:text-orange-600 text-sm transition-colors">Bantuan & FAQ</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('?page=refund')" class="text-slate-500 hover:text-orange-600 text-sm transition-colors">Kebijakan Refund</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('?page=terms')" class="text-slate-500 hover:text-orange-600 text-sm transition-colors">Syarat & Ketentuan</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-slate-900 font-bold text-sm mb-6 uppercase tracking-widest">Komunitas</h4>
+                    <ul class="space-y-4">
+                        <li><a href="https://t.me/dramaboss" target="_blank" class="text-slate-500 hover:text-orange-600 text-sm transition-colors flex items-center gap-2">
+                            <i class="fa fa-paper-plane"></i> Telegram Group
+                        </a></li>
+                        <li><a href="javascript:void(0)" class="text-slate-500 hover:text-orange-600 text-sm transition-colors flex items-center gap-2">
+                            <i class="fa fa-instagram"></i> Instagram
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-400 text-xs text-center md:text-left">
+                    &copy; ${new Date().getFullYear()} DRACINBUZZ. Seluruh hak cipta dilindungi undang-undang. Dimotori oleh DramaBox Media.
+                </p>
+                <div class="flex items-center gap-6">
+                    <img src="https://img.shields.io/badge/SSL-Secured-green" class="h-5 opacity-50">
+                    <img src="https://img.shields.io/badge/Payment-Safe-blue" class="h-5 opacity-50">
+                </div>
+            </div>
+        </div>
+    </footer>
+    `;
+};
+
+async function renderTerms() {
+    const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML = `
+    <div class="max-w-4xl mx-auto p-4 py-20 fade-in">
+        <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Syarat & <span class="text-orange-600">Ketentuan</span></h1>
+        <p class="text-slate-500 mb-12">Terakhir diperbarui: ${new Date().toLocaleDateString('id-ID')}</p>
+
+        <div class="space-y-12 text-slate-600 leading-relaxed">
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">1. Penerimaan Layanan</h2>
+                <p>Dengan mengakses dan menggunakan DracinBuzz, Anda menyatakan setuju untuk terikat oleh Syarat dan Ketentuan ini. Layanan kami ditujukan untuk hiburan pribadi dan tidak boleh digunakan untuk tujuan komersial tanpa izin tertulis.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">2. Akun Pengguna</h2>
+                <p>Anda bertanggung jawab penuh atas kerahasiaan informasi akun dan password Anda. Segala aktivitas yang terjadi melalui akun Anda dianggap sebagai tanggung jawab Anda sepenuhnya. DracinBuzz berhak menangguhkan akun yang terindikasi melakukan pelanggaran atau aktivitas mencurigakan.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">3. Hak Kekayaan Intelektual</h2>
+                <p>Seluruh konten yang tersedia di DracinBuzz, termasuk namun tidak terbatas pada video, teks, grafis, logo, dan perangkat lunak, adalah milik DracinBuzz atau pemberi lisensi kami (DramaBox). Dilarang keras menyalin, mendistribusikan ulang, atau mengunggah kembali konten kami tanpa izin resmi.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">4. Batasan Tanggung Jawab</h2>
+                <p>Layanan kami disediakan "apa adanya" tanpa jaminan apa pun. DracinBuzz tidak bertanggung jawab atas kerugian langsung atau tidak langsung yang timbul dari ketidakmampuan Anda untuk mengakses layanan atau kegagalan teknis di luar kendali kami.</p>
+            </section>
+        </div>
+
+        <div class="mt-20 p-8 bg-slate-100 rounded-3xl text-center">
+            <h3 class="font-bold text-slate-900 mb-2">Punya pertanyaan lebih lanjut?</h3>
+            <p class="text-sm text-slate-500 mb-6">Tim dukungan kami siap membantu Anda memahami aturan layanan kami.</p>
+            <a href="https://t.me/dramaboss" target="_blank" class="px-8 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-orange-600 transition-all">Hubungi Kami</a>
+        </div>
+    </div>
+    `;
+}
+
+async function renderRefund() {
+    const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML = `
+    <div class="max-w-4xl mx-auto p-4 py-20 fade-in">
+        <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Kebijakan <span class="text-orange-600">Refund</span></h1>
+        <p class="text-slate-500 mb-12">Panduan pengembalian dana dan transaksi berlangganan DracinBuzz.</p>
+
+        <div class="space-y-12 text-slate-600">
+            <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-r-2xl">
+                <p class="font-bold text-orange-900 mb-2 italic">⚠️ Informasi Penting</p>
+                <p class="text-orange-800 text-sm">Sebagai platform konten digital, DracinBuzz menerapkan kebijakan ketat terkait pengembalian dana untuk memastikan keamanan dan keberlangsungan distribusi konten kami.</p>
+            </div>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">1. Produk Digital & Berlangganan</h2>
+                <p>Seluruh transaksi paket VIP (3 Hari, 7 Hari, 30 Hari) bersifat final. Karena akses ke konten digital diberikan secara instan setelah pembayaran berhasil, kami tidak memberikan pengembalian dana (refund) dengan alasan apa pun kecuali terjadi kesalahan sistem yang terverifikasi.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">2. Kesalahan Sistem</h2>
+                <p>Jika Anda telah melakukan pembayaran namun status VIP tidak aktif dalam waktu 1x24 jam, harap hubungi admin kami melalui Telegram dengan melampirkan bukti transaksi resmi dari Midtrans atau partner pembayaran kami.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-slate-900 mb-4">3. Pembatalan Otomatis</h2>
+                <p>Layanan kami tidak menggunakan sistem penagihan berulang (auto-renewal). Masa aktif akun Anda akan berakhir secara otomatis sesuai paket yang dibeli, sehingga tidak akan ada tagihan tidak terduga di bulan berikutnya.</p>
+            </section>
+        </div>
+
+        <div class="mt-20 flex flex-col items-center">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                <i class="fa fa-shield text-3xl text-slate-400"></i>
+            </div>
+            <p class="text-center text-slate-500 text-sm max-w-sm">Kami menggunakan gateway pembayaran Midtrans yang aman dan terenkripsi untuk setiap transaksi Anda.</p>
+        </div>
+    </div>
+    `;
+}
+
+async function renderFAQ() {
+    const contentArea = document.getElementById('content-area');
+    const faqs = [
+        {
+            q: "Bagaimana cara menjadi member VIP?",
+            a: "Klik tombol 'Upgrade VIP' atau 'Beli VIP' di dashboard, pilih paket yang Anda inginkan, dan lakukan pembayaran melalui Midtrans (QRIS, Bank Transfer, atau E-Wallet)."
+        },
+        {
+            q: "Video macet atau tidak berputar?",
+            a: "Pastikan koneksi internet Anda stabil. Cobalah untuk memuat ulang halaman (refresh) atau bersihkan cache browser Anda. Kami menyarankan penggunaan browser Chrome atau Safari versi terbaru."
+        },
+        {
+            q: "Apakah film bisa di-download?",
+            a: "Untuk saat ini DracinBuzz hanya mendukung layanan streaming online guna melindungi hak cipta konten dari pemberi lisensi kami."
+        },
+        {
+            q: "Kenapa saya tidak bisa menonton di atas 10 episode?",
+            a: "Beberapa drama eksklusif membatasi jumlah episode gratis. Untuk melanjutkan menonton hingga tamat, Anda memerlukan keanggotaan VIP aktif."
+        },
+        {
+            q: "Saya sudah bayar tapi VIP belum aktif?",
+            a: "Sistem biasanya mengaktifkan VIP secara instan. Jika dalam 10 menit belum aktif, silakan logout dan login kembali untuk memperbarui status akun Anda."
+        }
+    ];
+
+    contentArea.innerHTML = `
+    <div class="max-w-4xl mx-auto p-4 py-20 fade-in">
+        <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter">Tanya <span class="text-orange-600">Jawab</span></h1>
+        <p class="text-slate-500 mb-12">Semua hal yang perlu Anda ketahui tentang DracinBuzz.</p>
+
+        <div class="space-y-4">
+            ${faqs.map((faq, i) => `
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition-all hover:border-orange-200">
+                    <button class="w-full p-6 text-left flex justify-between items-center group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                        <span class="font-bold text-slate-800 group-hover:text-orange-600 transition-colors">${faq.q}</span>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="hidden p-6 pt-0 text-slate-500 border-t border-slate-50 text-sm leading-relaxed">
+                        ${faq.a}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="mt-20 border-t border-slate-200 pt-12 flex flex-col md:flex-row items-center gap-8">
+            <div class="flex-1">
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Masih butuh bantuan?</h3>
+                <p class="text-slate-500 text-sm">Jika pertanyaaan Anda tidak terjawab di sini, admin kami siap membantu melalui saluran Telegram resmi.</p>
+            </div>
+            <a href="https://t.me/dramaboss" target="_blank" class="px-8 py-4 bg-orange-500 text-slate-900 font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20">
+                CHAT ADMIN SEKARANG
+            </a>
+        </div>
+    </div>
+    `;
+}
 
 const router = async () => {
     const contentArea = document.getElementById('content-area');
@@ -433,6 +621,21 @@ const router = async () => {
                 } else {
                     contentArea.innerHTML = `<div class="p-20 text-center text-slate-500">Fungsi renderSignup tidak ditemukan.</div>`;
                 }
+                return;
+            }
+
+            if (p === 'faq') {
+                await renderFAQ();
+                return;
+            }
+
+            if (p === 'refund') {
+                await renderRefund();
+                return;
+            }
+
+            if (p === 'terms') {
+                await renderTerms();
                 return;
             }
 
