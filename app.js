@@ -1663,28 +1663,81 @@ window.renderLogin = () => {
     const contentArea = document.getElementById('content-area');
     contentArea.innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-[80vh] text-slate-900 p-6">
-            <div class="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-extrabold text-orange-600">MASUK</h2>
-                    <p class="text-slate-600 mt-2 text-sm">Masuk untuk akses semua episode</p>
+            <div class="w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 ring-1 ring-slate-100 flex flex-col items-center">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase mb-2">Selamat Datang</h2>
+                    <p class="text-slate-500 text-sm">Masuk untuk menikmati akses premium DracinBuzz</p>
                 </div>
-                <div class="space-y-5">
-                    <input type="email" id="login-email" placeholder="Email" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-orange-500 transition">
-                    <input type="password" id="login-password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-orange-500 transition">
-                    <button onclick="processLogin()" id="btn-login" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl shadow-lg transition duration-200">
-                        Masuk Sekarang
-                    </button>
+                
+                <div id="google-btn-container" class="w-full flex justify-center py-4"></div>
+
+                <div class="mt-10 pt-8 border-t border-slate-100 w-full text-center">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
+                        Dengan masuk, Anda menyetujui<br>
+                        Syarat & Ketentuan kami.
+                    </p>
                 </div>
-                <p class="mt-8 text-center text-slate-600 text-sm">
-                    Belum punya akun? <a href="/?page=signup" onclick="event.preventDefault(); window.navigateTo('/?page=signup')" class="text-orange-600 font-bold hover:underline">Daftar</a>
-					<br>
-					<p class="text-slate-600 mt-2 text-sm">
-					Username: demo<br>
-					Password: demo</p>
-                </p>
             </div>
         </div>
     `;
+
+    // Initialize Google Sign-In
+    if (window.google) {
+        google.accounts.id.initialize({
+            client_id: "1073551370799-5pob46kdiejrvstvc0ijnb2l1kqj64v6.apps.googleusercontent.com",
+            callback: handleGoogleCredentialResponse,
+            auto_select: false
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("google-btn-container"),
+            { theme: "outline", size: "large", width: 280, shape: "pill" }
+        );
+    } else {
+        setTimeout(window.renderLogin, 500);
+    }
+};
+
+window.handleGoogleCredentialResponse = async (response) => {
+    const idToken = response.credential;
+    
+    try {
+        const res = await fetch(`${CONFIG.BASE_URL}/user/google-auth`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-api-key': CONFIG.KEY 
+            },
+            body: JSON.stringify({ idToken })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+            localStorage.setItem('user_token', data.token);
+            localStorage.setItem('user_premium', data.user?.isPremium ? '1' : '0');
+            localStorage.setItem('user_data', JSON.stringify(data.user));
+
+            showToast("Login Berhasil! Selamat menonton.", "success"); 
+            
+            const header = document.querySelector('nav');
+            if (header) {
+                header.outerHTML = getNavbar();
+            }
+
+            const targetPage = localStorage.getItem('redirect_after_login') || '/';
+            localStorage.removeItem('redirect_after_login'); 
+
+            if (targetPage === '/') {
+                window.navigateTo('/');
+            } else {
+                window.location.href = targetPage;
+            }
+        } else {
+            showToast("Gagal masuk dengan Google.", "error"); 
+        }
+    } catch (err) {
+        showToast("Kesalahan jaringan saat login Google.", "error"); 
+    }
 };
 
 window.showConfirmModal = (message, onConfirm) => {
@@ -1749,122 +1802,7 @@ window.logout = () => {
     });
 };
 
-window.processLogin = async () => {
-    const emailInput = document.getElementById('login-email');
-    const passwordInput = document.getElementById('login-password');
-    const btn = document.getElementById('btn-login');
-    const email = emailInput?.value.trim();
-    const password = passwordInput?.value;
-
-    if (!email || !password) {
-		showToast("Email dan password tidak boleh kosong", "error");
-        return;
-    }
-
-    const originalBtnText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<span class="inline-block animate-spin mr-2">⏳</span> Memproses...`;
-
-    try {
-        const res = await fetch(`${CONFIG.BASE_URL}/user/login`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'x-api-key': CONFIG.KEY 
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.token) {
-            localStorage.setItem('user_token', data.token);
-            localStorage.setItem('user_premium', data.user?.isPremium ? '1' : '0');
-
-			showToast("Login Berhasil! Selamat menonton.", "success"); 
-			
-            const header = document.querySelector('nav');
-            if (header) {
-                header.outerHTML = getNavbar();
-            }
-
-            const targetPage = localStorage.getItem('redirect_after_login') || '/';
-            localStorage.removeItem('redirect_after_login'); 
-
-            if (targetPage === '/') {
-                window.navigateTo('/');
-            } else {
-                window.location.href = targetPage;
-            }
-
-        } else {
-			showToast("Gagal masuk. Periksa kembali email dan password Anda.", "error"); 
-        }
-    } catch (err) {
-		showToast("Terjadi kesalahan jaringan. Pastikan server sudah berjalan.", "error"); 
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = originalBtnText;
-        }
-    }
-};
-
-window.renderSignup = () => {
-    const contentArea = document.getElementById('content-area');
-    contentArea.innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-[80vh] text-slate-900 p-6">
-            <div class="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-extrabold text-orange-600">DAFTAR</h2>
-                    <p class="text-slate-600 mt-2 text-sm">Buat akun gratis untuk menonton</p>
-                </div>
-                <div class="space-y-5">
-                    <input type="email" id="signup-email" placeholder="Email Baru" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-orange-500 transition">
-                    <input type="password" id="signup-password" placeholder="Buat Password" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-orange-500 transition">
-                    <button onclick="processSignup()" id="btn-signup" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl shadow-lg transition duration-200">
-                        Daftar Akun
-                    </button>
-                </div>
-                <p class="mt-8 text-center text-slate-600 text-sm">
-                    Sudah punya akun? <a href="/?page=login" onclick="event.preventDefault(); window.navigateTo('/?page=login')" class="text-orange-600 font-bold hover:underline">Masuk</a>
-                </p>
-            </div>
-        </div>
-    `;
-};
-
-window.processSignup = async () => {
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-    const btn = document.getElementById('btn-signup');
-
-    if (!email || !password) return showToast("Isi seua kolom!", "error"); 
-
-    btn.disabled = true;
-    btn.innerText = "Mendaftar...";
-
-    try {
-        const res = await fetch(`${CONFIG.BASE_URL}/user/signup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': CONFIG.KEY },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-			showToast("Pendaftaran Berhasil! Silakan Login.", "success");
-            window.navigateTo('/?page=login');
-        } else {
-			showToast("Gagal mendaftar!", "error"); 
-        }
-    } catch (e) {
-		showToast("Gagal terhubung ke server!", "error"); 
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Daftar Akun";
-    }
-};
+// renderSignup, processSignup, and processLogin are removed as we move entirely to Google Auth.
 
 window.showToast = (message, type = 'success') => {
     const container = document.getElementById('notification-container');
@@ -2158,10 +2096,7 @@ const renderDashboard = async () => {
 
                     <div class="bg-white/50 border border-slate-200 p-6 rounded-2xl">
 						<h3 class="text-slate-500 text-xs font-bold uppercase mb-4 tracking-widest">Keamanan</h3>
-						<button onclick="openChangePasswordModal()" class="text-orange-600 hover:text-orange-600 text-sm font-semibold flex items-center gap-2">
-							<span>Ganti Password</span>
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-						</button>
+						<p class="text-slate-400 text-xs italic">Akun Anda dikelola secara aman melalui Google Authentication.</p>
 					</div>
                 </div>
             </div>
@@ -2171,103 +2106,7 @@ const renderDashboard = async () => {
     }
 };
 
-const openChangePasswordModal = () => {
-    const modalHtml = `
-    <div id="pw-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-        <div class="bg-white border border-slate-200 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
-            <div class="p-6 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="text-xl font-bold text-slate-900">Ganti Password</h3>
-                <button onclick="document.getElementById('pw-modal').remove()" class="text-slate-500 hover:text-slate-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-            </div>
-            <form id="pw-form" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Password Lama</label>
-                    <input type="password" id="old-pw" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:border-orange-500 outline-none transition-all">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Password Baru</label>
-                    <input type="password" id="new-pw" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:border-orange-500 outline-none transition-all">
-                </div>
-                <button type="submit" id="btn-pw-submit" class="w-full py-4 bg-orange-500 hover:bg-orange-600 text-slate-900 font-bold rounded-xl transition-all shadow-lg shadow-orange-500/20">
-                    SIMPAN PERUBAHAN
-                </button>
-            </form>
-        </div>
-    </div>`;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    document.getElementById('pw-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('btn-pw-submit');
-        const oldPassword = document.getElementById('old-pw').value;
-        const newPassword = document.getElementById('new-pw').value;
-        const originalText = btn.innerText;
-
-        btn.disabled = true;
-        btn.innerText = "MEMPROSES...";
-
-        try {
-            const token = localStorage.getItem('user_token');
-            const res = await fetch(`${CONFIG.BASE_URL}/user/change-password`, {
-                method: 'POST',
-                headers: {
-                    ...REQUEST_OPTIONS.headers,
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ oldPassword, newPassword })
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                showToast("Password berhasil diganti! Silakan login ulang.", "success");
-                setTimeout(() => logout(), 2000);
-            } else {
-                showToast(data.message || "Gagal mengganti password", "error");
-            }
-        } catch (err) {
-            showToast("Terjadi kesalahan koneksi", "error");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    };
-};
-
-const showChangePasswordModal = async () => {
-    const oldPassword = prompt("Masukkan Password Lama:");
-    if (!oldPassword) return;
-
-    const newPassword = prompt("Masukkan Password Baru (Minimal 6 karakter):");
-    if (!newPassword || newPassword.length < 6) {
-        alert("Password baru tidak valid.");
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('user_token');
-        const res = await fetch(`${CONFIG.BASE_URL}/user/change-password`, {
-            method: 'POST',
-            headers: {
-                ...REQUEST_OPTIONS.headers,
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ oldPassword, newPassword })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            alert("Berhasil! Silakan login kembali dengan password baru.");
-            logout(); 
-        } else {
-            alert(data.message || "Gagal mengganti password");
-        }
-    } catch (err) {
-        alert("Terjadi kesalahan koneksi.");
-    }
-};
+// Password management modals and functions are removed.
 
 
 (async () => {
