@@ -496,7 +496,7 @@ async function renderRefund() {
 
             <section>
                 <h2 class="text-xl font-bold text-slate-900 mb-4">2. Kesalahan Sistem</h2>
-                <p>Jika Anda telah melakukan pembayaran namun status VIP tidak aktif dalam waktu 1x24 jam, harap hubungi admin kami melalui Telegram dengan melampirkan bukti transaksi resmi dari Midtrans atau partner pembayaran kami.</p>
+                <p>Jika Anda telah melakukan pembayaran namun status VIP tidak aktif dalam waktu 1x24 jam, harap hubungi admin kami melalui Telegram dengan melampirkan bukti transaksi resmi dari AutoGopay atau partner pembayaran kami.</p>
             </section>
 
             <section>
@@ -509,7 +509,7 @@ async function renderRefund() {
             <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                 <i class="fa fa-shield text-3xl text-slate-400"></i>
             </div>
-            <p class="text-center text-slate-500 text-sm max-w-sm">Kami menggunakan gateway pembayaran Midtrans yang aman dan terenkripsi untuk setiap transaksi Anda.</p>
+            <p class="text-center text-slate-500 text-sm max-w-sm">Kami menggunakan gateway pembayaran QRIS AutoGopay yang aman dan terenkripsi untuk setiap transaksi Anda.</p>
         </div>
     </div>
     `;
@@ -520,7 +520,7 @@ async function renderFAQ() {
     const faqs = [
         {
             q: "Bagaimana cara menjadi member VIP?",
-            a: "Klik tombol 'Upgrade VIP' atau 'Beli VIP' di dashboard, pilih paket yang Anda inginkan, dan lakukan pembayaran melalui Midtrans (QRIS, Bank Transfer, atau E-Wallet)."
+            a: "Klik tombol 'Upgrade VIP' atau 'Beli VIP' di dashboard, pilih paket yang Anda inginkan, dan lakukan pembayaran melalui AutoGopay (Scan QRIS)."
         },
         {
             q: "Video macet atau tidak berputar?",
@@ -1899,13 +1899,18 @@ window.showToast = (message, type = 'success') => {
     }, 3000);
 };
 
-window.showPaymentModal = () => {
-    if (document.getElementById('payment-modal')) return;
-    document.body.style.overflow = 'hidden';
+window.showPaymentModal = (reRender = false) => {
+    let modal = document.getElementById('payment-modal');
+    if (modal && !reRender) return;
 
-    const modal = document.createElement('div');
-    modal.id = 'payment-modal';
-    modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4';
+    if (!modal) {
+        document.body.style.overflow = 'hidden';
+        modal = document.createElement('div');
+        modal.id = 'payment-modal';
+        modal.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4';
+        document.body.appendChild(modal);
+    }
+
     modal.innerHTML = `
         <div class="bg-white w-full max-w-sm rounded-3xl border border-slate-200 p-6 text-center shadow-2xl animate-fade-in">
             <div class="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1951,7 +1956,6 @@ window.showPaymentModal = () => {
             <button onclick="closePaymentModal()" class="mt-6 text-gray-500 text-xs hover:text-slate-900 transition">Mungkin Nanti</button>
         </div>
     `;
-    document.body.appendChild(modal);
 };
 
 window.closePaymentModal = () => {
@@ -1960,19 +1964,6 @@ window.closePaymentModal = () => {
         modal.remove();
         document.body.style.overflow = 'auto';
     }
-};
-
-window.loadSnapScript = (snapUrl, clientKey) => {
-    return new Promise((resolve, reject) => {
-        if (window.snap) return resolve();
-        
-        const script = document.createElement('script');
-        script.src = snapUrl;
-        script.setAttribute('data-client-key', clientKey);
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
 };
 
 window.processPayment = async (plan, event) => {
@@ -2004,28 +1995,46 @@ window.processPayment = async (plan, event) => {
 
         const data = await res.json();
 
-        if (res.status === 201 && data.token) {
-            // Load Snap script dynamically before paying
-            await loadSnapScript(data.snap_url, data.client_key);
+        if (res.status === 201 && data.qr_url) {
+            const modalBody = document.querySelector('#payment-modal > div');
+            if (!modalBody) return;
 
-            window.snap.pay(data.token, {
-                onSuccess: (result) => { 
-                    alert("Pembayaran Berhasil! Status Premium Anda sedang diproses."); 
-                    location.reload(); 
-                },
-                onPending: (result) => { 
-                    alert("Pesanan dibuat. Silakan selesaikan pembayaran di aplikasi bank/e-wallet Anda."); 
-                },
-                onError: (result) => { 
-                    alert("Terjadi kesalahan saat memproses pembayaran."); 
-                },
-                onClose: () => {
-                    console.log('User menutup popup pembayaran');
-                }
-            });
+            // Berhenti menampilkan list paket, ganti dengan QR Code
+            modalBody.innerHTML = `
+                <div class="animate-fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <button onclick="showPaymentModal(true)" class="text-slate-400 hover:text-orange-600 transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <h3 class="text-lg font-bold text-slate-900">Scan QRIS</h3>
+                        <div class="w-6"></div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-2xl border-4 border-slate-100 shadow-inner mb-4">
+                        <img src="${data.qr_url}" class="w-full aspect-square object-contain" alt="QRIS AutoGopay">
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mb-6">
+                        <p class="text-[10px] text-orange-800 font-bold uppercase tracking-wider mb-1">Total Bayar</p>
+                        <p class="text-xl font-black text-orange-600">Rp ${data.plan.price.toLocaleString('id-ID')}</p>
+                    </div>
+
+                    <div id="polling-status" class="flex items-center justify-center gap-2 text-slate-500 text-xs">
+                        <div class="w-2 h-2 bg-orange-500 rounded-full animate-ping"></div>
+                        Menunggu pembayaran...
+                    </div>
+                    
+                    <button onclick="location.reload()" class="mt-8 text-gray-400 text-[10px] hover:text-slate-900 transition underline underline-offset-4">
+                        Batalkan & Kembali
+                    </button>
+                </div>
+            `;
+
+            // Mulai Polling Status
+            startPaymentPolling(data.transaction_id);
+
         } else {
-            // Tampilkan detail error agar bisa di-debug
-            const errorMsg = data.detail ? `${data.message}: ${Array.isArray(data.detail) ? data.detail.join(', ') : data.detail}` : data.message;
+            const errorMsg = data.detail ? `${data.message}: ${data.detail}` : data.message;
             alert(errorMsg || "Gagal membuat sesi pembayaran.");
         }
     } catch (err) {
@@ -2037,6 +2046,51 @@ window.processPayment = async (plan, event) => {
             btn.innerHTML = originalHTML;
         }
     }
+};
+
+window.startPaymentPolling = (transactionId) => {
+    let attempts = 0;
+    const maxAttempts = 60; // 5 menit (setiap 5 detik)
+    const token = localStorage.getItem('user_token');
+
+    const interval = setInterval(async () => {
+        attempts++;
+        if (attempts > maxAttempts) {
+            clearInterval(interval);
+            const statusEl = document.getElementById('polling-status');
+            if (statusEl) statusEl.innerHTML = "Waktu pembayaran habis. Silakan coba lagi.";
+            return;
+        }
+
+        try {
+            const res = await fetch(`${CONFIG.BASE_URL}/user/transaction-status/${transactionId}`, {
+                headers: {
+                    ...REQUEST_OPTIONS.headers,
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+
+            if (data.transaction_status === 'settlement') {
+                clearInterval(interval);
+                const modalBody = document.querySelector('#payment-modal > div');
+                if (modalBody) {
+                    modalBody.innerHTML = `
+                        <div class="py-10 text-center animate-bounce">
+                            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/20">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3 class="text-xl font-black text-slate-900">Pembayaran Berhasil!</h3>
+                            <p class="text-slate-500 text-sm mt-2">Selamat menikmati akses Premium.</p>
+                        </div>
+                    `;
+                }
+                setTimeout(() => location.reload(), 2000);
+            }
+        } catch (e) {
+            console.error("Polling error:", e);
+        }
+    }, 5000); // Poll setiap 5 detik
 };
 
 /**
