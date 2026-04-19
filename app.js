@@ -200,7 +200,7 @@ const renderUnauthorizedPage = async (root) => {
                 </div>
                 <p style="color: #666; font-size: 13px; margin-bottom: 25px;">Akses ditolak atau domain ini tidak memiliki izin untuk menggunakan konten server.</p>
                 <div style="display: grid; gap: 10px;">
-                    <a href="https://t.me/dramaboss" target="_blank" style="text-decoration: none; padding: 12px; background: #0088cc; color: #1e293b; border-radius: 8px; font-weight: 600;">Hubungi Administrator</a>
+                    <a href="https://t.me/dracinbuzz" target="_blank" style="text-decoration: none; padding: 12px; background: #0088cc; color: #1e293b; border-radius: 8px; font-weight: 600;">Hubungi Administrator</a>
                     <button onclick="window.location.reload()" style="cursor: pointer; padding: 12px; background: white; color: #555; border: 1px solid #ddd; border-radius: 8px;">Coba Muat Ulang</button>
                 </div>
             </div>
@@ -414,7 +414,7 @@ const getFooter = () => {
                 <div>
                     <h4 class="text-slate-900 font-bold text-sm mb-6 uppercase tracking-widest">Komunitas</h4>
                     <ul class="space-y-4">
-                        <li><a href="https://t.me/dramaboss" target="_blank" class="text-slate-500 hover:text-orange-600 text-sm transition-colors flex items-center gap-2">
+                        <li><a href="https://t.me/dracinbuzz" target="_blank" class="text-slate-500 hover:text-orange-600 text-sm transition-colors flex items-center gap-2">
                             <i class="fa fa-paper-plane"></i> Telegram Group
                         </a></li>
                         <li><a href="javascript:void(0)" class="text-slate-500 hover:text-orange-600 text-sm transition-colors flex items-center gap-2">
@@ -470,7 +470,7 @@ async function renderTerms() {
         <div class="mt-20 p-8 bg-slate-100 rounded-3xl text-center">
             <h3 class="font-bold text-slate-900 mb-2">Punya pertanyaan lebih lanjut?</h3>
             <p class="text-sm text-slate-500 mb-6">Tim dukungan kami siap membantu Anda memahami aturan layanan kami.</p>
-            <a href="https://t.me/dramaboss" target="_blank" class="px-8 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-orange-600 transition-all">Hubungi Kami</a>
+            <a href="https://t.me/dracinbuzz" target="_blank" class="px-8 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-orange-600 transition-all">Hubungi Kami</a>
         </div>
     </div>
     `;
@@ -564,7 +564,7 @@ async function renderFAQ() {
                 <h3 class="text-xl font-bold text-slate-900 mb-2">Masih butuh bantuan?</h3>
                 <p class="text-slate-500 text-sm">Jika pertanyaaan Anda tidak terjawab di sini, admin kami siap membantu melalui saluran Telegram resmi.</p>
             </div>
-            <a href="https://t.me/dramaboss" target="_blank" class="px-8 py-4 bg-orange-500 text-slate-900 font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20">
+            <a href="https://t.me/dracinbuzz" target="_blank" class="px-8 py-4 bg-orange-500 text-slate-900 font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20">
                 CHAT ADMIN SEKARANG
             </a>
         </div>
@@ -1279,7 +1279,7 @@ function renderTiktokStyle(videoUrl, drama, chapterId, container, videoData) {
                 </div>
 
                 <div class="absolute left-4 bottom-24 right-20 z-30 text-slate-900 pointer-events-none">
-                    <h4 class="font-bold text-sm mb-1 text-shadow-lg">@Official_Dramaboss</h4>
+                    <h4 class="font-bold text-sm mb-1 text-shadow-lg">@Official_Dracinbuzz</h4>
                     <p class="text-xs opacity-90 leading-snug line-clamp-2 text-shadow-md">
                         ${drama.bookName} - ${videoData.chapterName || 'Episode ' + (currentIndex + 1)}
                     </p>
@@ -1312,7 +1312,7 @@ function renderTiktokStyle(videoUrl, drama, chapterId, container, videoData) {
 window.shareContent = async () => {
     const shareData = {
         title: document.title,
-        text: `Enjoy Watch Drama on DRAMABOSS!`,
+        text: `Enjoy Watch Drama on DRACINBUZZ!`,
         url: window.location.href
     };
 
@@ -1511,7 +1511,7 @@ async function renderDesktopStyle(videoUrl, drama, chapterId, container, bookId,
                             <i class="fa fa-play text-white text-xs"></i>
                         </div>
                         <div>
-                            <p class="font-bold">Official Dramaboss</p>
+                            <p class="font-bold">Official Dracinbuzz</p>
                             <p class="text-xs text-slate-500">1.2M Subscribers</p>
                         </div>
                     </div>
